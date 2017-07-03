@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+脚本版本：2
+脚本说明：
+	所有status不得修改。
+
+	所有 type='static' 的都是必选的脚本。
+	只能修改pic，有pOut的才能修改pOut的数值。
+	其他不得修改。
+	
+	所有 type='dynamic' 的都是可选脚本。
+	推荐保留已有动作。
+	可依葫芦画瓢添加自定义动作。
+	
+	参数说明：
+	<script>
+		name			:	脚本名称
+		type			:	脚本类型。static/dynamic分别表示静态脚本和动态脚本
+		pOut			:	系一秒钟向其他状态转移的概率/1000 如：pOut='20' 表示每秒钟有0.02的概率转向其他状态。	【仅static可用】
+		p				:	动态脚本发生权重。
+							当static发生状态转移时，本脚本发生概率=该脚本p/同Status中dynamic的p之和					【仅dynamic可用】
+		repeatTimeMax	:	脚本重复执行最大次数。																	【仅dynamic可用】
+		repeatTimeMin	:	脚本重复执行最小次数。（实际运行次数在区间中随机选择）									【仅dynamic可用】
+		toStatus		：	脚本执行结束后转向指定Status															【仅dynamic可用】
+		toScript		：	脚本执行结束后转向指定Script脚本（和toStatus连用）										【仅dynamic可用】
+		toVx			：	脚本执行结束后保留水平方向速度															【仅dynamic可用】
+		toVy			：	脚本执行结束后保留竖直方向速度															【仅dynamic可用】
+		
+	<action>
+		pic				:	对应图片文件名称
+		Mirror-X		:	图片水平反向（沿Y轴）
+		Mirror-Y		:	图片竖直反向
+		useTime			：	动作时长（毫秒）	【仅dynamic可用】
+		XMoveMax		：	水平移动最大距离	【仅dynamic可用】
+		XMoveMin		：	水平移动最小距离	【仅dynamic可用】
+		YMoveMax		：	竖直移动最大距离	【仅dynamic可用】
+		YMoveMin		：	竖直移动最小距离	【仅dynamic可用】
+
+		
+-->
+<!--脚本版本：2-->
+<root version='2'>
+
+	<!--
+	Status
+		catch		被鼠标抓住时
+		falling		掉落时
+		floor		在地板上
+		wall-left	在屏幕左侧
+		wall-right	在屏幕右侧
+	-->
+	
+	<!--被抓住时-->
+	<status name='catch'>
+		<!--被抓住-普通-向左-->
+		<script name='general-left' type='static'>
+			<action pic='shime5.png'></action>
+		</script>
+		<!--被抓住-剧烈-向左-->
+		<script name='throw-left' type='static'>
+			<action pic='shime7.png'></action>
+		</script>
+		
+		<!--被抓住-普通-向右-->
+		<script name='general-right' type='static'>
+			<action pic='shime5.png' Mirror-X='True'></action>
+		</script>
+		<!--被抓住-剧烈-向右-->
+		<script name='throw-right' type='static'>
+			<action pic='shime7.png' Mirror-X='True'></action>
+		</script>
+	</status>
+	
+	<!--空中落体运动时-->
+	<status name='falling'>
+		<!--落体运动 向上-->
+		<script name='up-left' type='static'>
+			<action pic='shime5.png'></action>
+		</script>
+		<!--落体运动 向下-->
+		<script name='down-left' type='static'>
+			<action pic='shime4.png'></action>
+		</script>
+		<!--落体运动 向上-->
+		<script name='up-right' type='static'>
+			<action pic='shime5.png' Mirror-X='True'></action>
+		</script>
+		<!--落体运动 向下-->
+		<script name='down-right' type='static'>
+			<action pic='shime4.png' Mirror-X='True'></action>
+		</script>
+	</status>
+	
+	<!--平地上-->
+	<status name='floor'>
+		<!--普通站立-->
+		<script name='general-left' type='static' pOut='100'>
+			<action pic='shime1.png'></action>
+		</script>
+		<!--普通站立-->
+		<script name='general-right' type='static' pOut='100'>
+			<action pic='shime1.png' Mirror-X='True'></action>
+		</script>
+		
+		
+		<!--着陆左 【必须有！】-->
+		<script name='toFloor-left' type='dynamic'>
+			<action pic='shime20.png' useTime='400'></action>
+			<action pic='shime18.png' useTime='200'></action>
+		</script>
+		<!--着陆右 【必须有！】-->
+		<script name='toFloor-right' type='dynamic'>
+			<action pic='shime20.png' useTime='400' Mirror-X='True'></action>
+			<action pic='shime18.png' useTime='200' Mirror-X='True'></action>
+		</script>
+
+		<!--向左走-->
+		<script name='walk-left' type='dynamic' repeatTimeMax='20' repeatTimeMin='1' p='20'>
+			<action pic='shime2.png' useTime='300' XMoveMax='-1' XMoveMin='-1'></action>
+			<action pic='shime3.png' useTime='300' XMoveMax='-1' XMoveMin='-1'></action>
+		</script>
+		<!--向右走-->
+		<script name='walk-right' type='dynamic' repeatTimeMax='20' repeatTimeMin='1' p='20'>
+			<action pic='shime2.png' useTime='300' XMoveMax='1' XMoveMin='1' Mirror-X='True'></action>
+			<action pic='shime3.png' useTime='300' XMoveMax='1' XMoveMin='1' Mirror-X='True'></action>
+		</script>
+		
+		<!--坐-->
+		<script name='Sit' type='dynamic' p='10'>
+			<action pic='shime18.png' useTime='300'></action>
+			<action pic='shime11.png' useTime='3000'></action>
+		</script>
+		
+		<!--趴下-->
+		<script name='sleeplySit' type='dynamic' p='10'>
+			<action pic='shime18.png' useTime='300'></action>
+			<action pic='shime20.png' useTime='1000'></action>
+			
+			<action pic='shime30.png' useTime='1500'></action>
+			<action pic='shime31.png' useTime='500'></action>
+			<action pic='shime32.png' useTime='500'></action>
+			<action pic='shime30.png' useTime='1500'></action>
+			<action pic='shime31.png' useTime='500'></action>
+			<action pic='shime32.png' useTime='500'></action>
+		
+			<action pic='shime32.png' useTime='3000'></action>
+			<action pic='shime33.png' useTime='3000'></action>
+			<action pic='shime32.png' useTime='3000'></action>
+			<action pic='shime33.png' useTime='3000'></action>
+			
+			<action pic='shime20.png' useTime='1000'></action>
+			<action pic='shime18.png' useTime='300'></action>
+		</script>
+		
+		<!--跳-->
+		<script name='jump' type='dynamic' p='10' repeatTimeMax='3' repeatTimeMin='1'>
+			<action pic='shime49.png' useTime='300'></action>
+			<action pic='shime47.png' useTime='100' XMoveMax='-2' XMoveMin='-2'  YMoveMax='-1' YMoveMin='-1'></action>
+			<action pic='shime47.png' useTime='50' XMoveMax='-2' XMoveMin='-2'  YMoveMax='-0.5' YMoveMin='-0.5'></action>
+			<action pic='shime47.png' useTime='50' XMoveMax='-2' XMoveMin='-2'  YMoveMax='0.5' YMoveMin='0.5'></action>
+			<action pic='shime47.png' useTime='100' XMoveMax='-2' XMoveMin='-2'  YMoveMax='1' YMoveMin='1'></action>
+			<action pic='shime48.png' useTime='300'></action>
+		</script>
+		
+		<!--飞上去 左-->
+		<script name='fly-left' type='dynamic' p='2'>
+			<action pic='shime49.png' useTime='1000'></action>
+			<action pic='shime47.png' useTime='200' XMoveMax='-2' XMoveMin='-2'  YMoveMax='-1' YMoveMin='-1'></action>
+			<action pic='shime22.png' useTime='1000000' XMoveMax='-5' XMoveMin='-5'  YMoveMax='-2' YMoveMin='-2'></action>
+		</script>
+		
+		<!--飞上去 右-->
+		<script name='fly-right' type='dynamic' p='2'>
+			<action pic='shime49.png' useTime='1000' Mirror-X='True'></action>
+			<action pic='shime47.png' useTime='200' XMoveMax='2' XMoveMin='2'  YMoveMax='-1' YMoveMin='-1' Mirror-X='True'></action>
+			<action pic='shime22.png' useTime='1000000' XMoveMax='5' XMoveMin='5'  YMoveMax='-2' YMoveMin='-2' Mirror-X='True'></action>
+		</script>
+	</status>
+	
+	<!--左侧边-->
+	<status name='wall-left'>
+		<!--左侧 普通爬墙-->
+		<script name='general' type='static' pOut='300'>
+			<action pic='shime12.png'></action>
+		</script>
+		<!--左侧 向上爬-->
+		<script name='up' type='dynamic' p='30' repeatTimeMax='6' repeatTimeMin='1' >
+			<action pic='shime13.png' useTime='300' YMoveMax='-1' YMoveMin='-1'></action>
+			<action pic='shime14.png' useTime='300' YMoveMax='-1' YMoveMin='-1'></action>
+		</script>
+		<!--左侧 向下爬-->
+		<script name='down' type='dynamic' p='30' repeatTimeMax='5' repeatTimeMin='1' >
+			<action pic='shime13.png' useTime='300' YMoveMax='1' YMoveMin='1'></action>
+			<action pic='shime14.png' useTime='300' YMoveMax='1' YMoveMin='1'></action>
+		</script>
+		<!--左侧 跳-->
+		<script name='jump' type='dynamic' p='5' toStatus='falling' toScript='down-left' toVx='True'>
+			<action pic='shime13.png' useTime='100' XMoveMax='5' XMoveMin='2'></action>
+		</script>
+	</status>
+	
+	<!--右侧边-->
+	<status name='wall-right'>
+		<!--右侧 普通爬墙-->
+		<script name='general' type='static' pOut='300'>
+			<action pic='shime12.png' Mirror-X='True'></action>
+		</script>
+		<!--右侧 向上爬-->
+		<script name='up' type='dynamic' p='30' repeatTimeMax='6' repeatTimeMin='1' >
+			<action pic='shime13.png' useTime='300' YMoveMax='-1' YMoveMin='-1' Mirror-X='True'></action>
+			<action pic='shime14.png' useTime='300' YMoveMax='-1' YMoveMin='-1' Mirror-X='True'></action>
+		</script>
+		<!--右侧 向下爬-->
+		<script name='down' type='dynamic' p='30' repeatTimeMax='5' repeatTimeMin='1' >
+			<action pic='shime13.png' useTime='300' YMoveMax='1' YMoveMin='1' Mirror-X='True'></action>
+			<action pic='shime14.png' useTime='300' YMoveMax='1' YMoveMin='1' Mirror-X='True'></action>
+		</script>
+
+		<!--右侧 跳-->
+		<script name='jump' type='dynamic' p='5' toStatus='falling' toScript='down-right' toVx='True'>
+			<action pic='shime13.png' useTime='100' XMoveMax='-5' XMoveMin='-2'></action>
+		</script>
+	</status>
+	
+	
+</root>
