@@ -54,7 +54,7 @@ class myMain(QtGui.QWidget):
         self.trayIcon.showMessage(self.tr('关于 DP桌宠'),self.tr("版本:beta 2(公测版) / 提意见:suom@qq.com"))
 
     def showSite(self):
-        webbrowser.open_new_tab('http://dp.dpzco.com/')
+        webbrowser.open_new_tab('http://www.dpmoe.com/')
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 
